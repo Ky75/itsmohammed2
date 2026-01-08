@@ -19,7 +19,7 @@ const observer = new IntersectionObserver((entries) => {
 const observerOptions2 = {
     root: null,
     rootMargin: '0px',
-    threshold: 0.2// Trigger when 10% of element is visible
+    threshold: 0.4// Trigger when 10% of element is visible
 };
 
 const observer2= new IntersectionObserver((entries) => {

@@ -1,0 +1,714 @@
+:root {
+  --bg: #F0DBA5;
+  --text: #151515;
+  --yellow: #EDB74D;
+  --red: #fff;
+  /* Note: --red is set to white, likely intentional for a bright blob effect */
+  --green: #6FB18A;
+}
+
+* {
+  z-index: 1;
+  /* Ensures content stays above background blobs (which use z-index: 0) */
+}
+
+body,
+html {
+  margin: 0;
+  height: 100%;
+  background: #111;
+  overflow-x: hidden;
+}
+
+/* Subtle animated noise overlay for texture */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  opacity: 0.15;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 150px;
+  animation: jitter 8s infinite steps(10);
+}
+
+@keyframes jitter {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-5%, -10%);
+  }
+
+  20% {
+    transform: translate(-15%, 5%);
+  }
+
+  30% {
+    transform: translate(7%, -25%);
+  }
+
+  40% {
+    transform: translate(-5%, 25%);
+  }
+
+  50% {
+    transform: translate(-15%, 10%);
+  }
+
+  60% {
+    transform: translate(15%, 0%);
+  }
+
+  70% {
+    transform: translate(0, 15%);
+  }
+
+  80% {
+    transform: translate(-15%, 0%);
+  }
+
+  90% {
+    transform: translate(10%, 5%);
+  }
+}
+
+/* Language switcher button */
+.lang-button {
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: white;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.lang-button:hover {
+  transform: scale(1.05);
+}
+
+.globe-svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Header with language button aligned to the right */
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  top: 20px;
+  /* Added for better spacing from top */
+  z-index: 2;
+}
+
+/* Main centered content */
+.main-section {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
+
+/* Large title with animated noise fill */
+.header-title {
+  font-size: 6rem;
+  font-weight: 900;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: #fff;
+  /* Changed from #fff to transparent for proper clipping effect */
+  mix-blend-mode: overlay;
+}
+
+/* Subtitle using same noise effect */
+.header-subtitle {
+  font-size: 1rem;
+  font-weight: 900;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: #fff;
+  mix-blend-mode: overlay;
+  margin-top: 1rem;
+  /* Added spacing between title and subtitle */
+}
+
+.header-subtitle::before {
+  content: "Full-Stack Developer | Data Science Graduate | Lifelong Learner";
+  animation: words 30s infinite ease-in-out;
+}
+
+/* Container for animated background blobs */
+.blob-cont {
+  position: absolute;
+  inset: 0;
+  /* Modern replacement for top:0; left:0; width:100%; height:100vh */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 0;
+  pointer-events: none;
+  /* Ensures blobs don't block interaction */
+}
+
+/* Base blob styling */
+.blob {
+  border-radius: 100px;
+  filter: blur(60px);
+  opacity: 0.4;
+  position: absolute;
+}
+
+/* Yellow blob */
+.yellow {
+  background-color: var(--yellow);
+  height: 200px;
+  width: 200px;
+  animation: yellow 8s infinite ease;
+}
+
+/* Green blob */
+.green {
+  background-color: var(--green);
+  height: 200px;
+  width: 250px;
+  animation: green 8s infinite ease;
+}
+
+/* Red (white) blob */
+.red {
+  background-color: var(--red);
+  height: 250px;
+  width: 200px;
+  animation: red 8s infinite linear;
+}
+
+@media (max-width: 600px) {
+  .header-title {
+    font-size: 3rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .yellow,
+  .green,
+  .red {
+    width: 120px;
+    height: 120px;
+  }
+
+  .blob-cont {
+    justify-content: center;
+  }
+}
+
+/* Yellow blob movement */
+@keyframes yellow {
+
+  0%,
+  100% {
+    margin-top: 200px;
+    margin-left: 100px;
+    transform: scale(1);
+  }
+
+  30% {
+    margin-top: 300px;
+    margin-left: 150px;
+    transform: scale(1.2);
+  }
+
+  60% {
+    margin-top: 100px;
+    margin-left: 200px;
+    transform: scale(1.3);
+  }
+}
+
+/* Green blob movement */
+@keyframes green {
+
+  0%,
+  100% {
+    margin-top: 80px;
+    margin-right: -20px;
+    transform: scale(1.2);
+  }
+
+  30% {
+    margin-top: 300px;
+    margin-right: -20px;
+    transform: scale(1);
+  }
+
+  60% {
+    margin-top: 200px;
+    margin-right: 100px;
+    transform: scale(1);
+  }
+}
+
+/* Red blob movement */
+@keyframes red {
+
+  0%,
+  100% {
+    margin-top: 250px;
+    margin-right: 0;
+    transform: scale(1);
+  }
+
+  30% {
+    margin-top: 150px;
+    margin-right: 150px;
+    transform: scale(1.4);
+  }
+
+  60% {
+    margin-top: 250px;
+    margin-right: 100px;
+    transform: scale(1);
+  }
+}
+
+@keyframes words {
+
+  /* Each phrase: show -> fade out -> switch while invisible -> fade in */
+  0% {
+    content: "Attention to Details";
+    opacity: 0;
+  }
+
+  10% {
+    content: "Attention to Details";
+    opacity: 1;
+  }
+
+  20% {
+    content: "Attention to Details";
+    opacity: 0;
+    /* fade out */
+  }
+
+  25% {
+    content: "Data Expert";
+    opacity: 0;
+    /* content swapped while hidden */
+  }
+
+  35% {
+    content: "Data Expert";
+    opacity: 1;
+    /* fade in */
+  }
+
+  45% {
+    content: "Data Expert";
+    opacity: 0;
+    /* fade out again */
+  }
+
+  50% {
+    content: "Full-Stack Developer";
+    opacity: 0;
+  }
+
+  60% {
+    content: "Full-Stack Developer";
+    opacity: 1;
+  }
+
+  70% {
+    content: "Full-Stack Developer";
+    opacity: 0;
+  }
+
+  75% {
+    content: "Tech Enthusiast";
+    opacity: 0;
+  }
+
+  85% {
+    content: "Tech Enthusiast";
+    opacity: 1;
+  }
+
+  100% {
+    content: "Tech Enthusiast";
+    opacity: 0;
+  }
+}
+
+/* Base states - elements start hidden/off-position */
+.fade-in,
+.slide-up {
+  opacity: 0;
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+/* Slide up animation */
+.slide-up {
+  transform: translateY(50%);
+}
+
+/* Delay variations (optional, for staggered effect) */
+.delay-1 {
+  transition-delay: 0.3s;
+}
+
+.delay-2 {
+  transition-delay: 0.6s;
+}
+
+.delay-3 {
+  transition-delay: 0.9s;
+}
+
+/* Final state when in view */
+.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.showcase-cont {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-family: system-ui, sans-serif;
+
+}
+
+.showcase-item {
+  border-radius: 12px;
+  padding: 20px;
+  width: 250px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+
+.showcase-item .showcase-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.showcase-title {
+  font-size: 1rem;
+  font-weight: 600;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: #fff;
+  mix-blend-mode: overlay;
+  margin-top: 1rem;
+}
+
+.showcase-desc {
+  font-size: 0.8rem;
+  font-weight: 400;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: #ddd;
+  mix-blend-mode: overlay;
+  margin-top: 1rem;
+}
+
+.grainy {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+}
+
+/* Ensure the image fills the container and is not a replaced-element target for pseudo-elements */
+.grainy img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.grainy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 150px; /* Smaller = finer grain */
+  mix-blend-mode: soft-light; /* Best for realistic film look; try 'overlay' or 'screen' too */
+  opacity: 0.5; /* Adjust 0.3–0.8 for strength */
+  z-index: 10;
+  border-radius: 8px;
+}
+
+/* Optional: subtle animated movement for more realism */
+.grainy::before {
+  animation: grain-drift 20s linear infinite;
+}
+
+@keyframes grain-drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 150px 150px; }
+}
+
+.education-cont {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-family: system-ui, sans-serif;
+  margin-top: 40px;
+}
+
+.heading {
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 900;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: #fff;
+  mix-blend-mode: overlay;
+  margin-bottom: 20px;
+}
+
+.education-item {
+  border-radius: 12px;
+  padding: 20px;
+  width: 250px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.education-institution {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.education-degree {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ddd;
+  margin-bottom: 8px;
+}
+
+.education-dates {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #bbb;
+}
+
+.quote-cont {
+  width: 100%;
+  min-height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px 0;
+}
+
+.quote-text {
+  width: 100%;
+  max-width: 400px;
+  min-width: 250px;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 900;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: #fff;
+  mix-blend-mode: overlay;
+  margin-bottom: 20px;
+}
+/* Word-by-word fade-in animation */
+.word-fade-in span {
+  opacity: 0;                    /* Start hidden */
+  display: inline-block;        /* Important for spacing and transform */
+  /* Duration and easing */
+}
+.in-view-word span{
+  animation: fadeInUp 0.8s ease forwards;
+}
+/* Stagger the delays: each next word waits a bit longer */
+.word-fade-in span:nth-child(1) { animation-delay: 0.2s; }
+.word-fade-in span:nth-child(2) { animation-delay: 0.4s; }
+.word-fade-in span:nth-child(3) { animation-delay: 0.6s; }
+.word-fade-in span:nth-child(4) { animation-delay: 0.8s; }
+.word-fade-in span:nth-child(5) { animation-delay: 1.0s; }
+.word-fade-in span:nth-child(6) { animation-delay: 1.2s; }
+.word-fade-in span:nth-child(7) { animation-delay: 1.4s; }
+.word-fade-in span:nth-child(8) { animation-delay: 1.6s; }
+.word-fade-in span:nth-child(9) { animation-delay: 1.8s; }
+.word-fade-in span:nth-child(10) { animation-delay: 2.0s; }
+.word-fade-in span:nth-child(11) { animation-delay: 2.2s; }
+.word-fade-in span:nth-child(12) { animation-delay: 2.4s; }
+.word-fade-in span:nth-child(13) { animation-delay: 2.6s; }
+.word-fade-in span:nth-child(14) { animation-delay: 2.8s; }
+.word-fade-in span:nth-child(15) { animation-delay: 3.0s; }
+.word-fade-in span:nth-child(16) { animation-delay: 3.2s; }
+.word-fade-in span:nth-child(17) { animation-delay: 3.4s; }
+.word-fade-in span:nth-child(18) { animation-delay: 3.6s; }
+.word-fade-in span:nth-child(19) { animation-delay: 3.8s; }
+.word-fade-in span:nth-child(20) { animation-delay: 4.0s; }
+.word-fade-in span:nth-child(21) { animation-delay: 4.2s; }
+.word-fade-in span:nth-child(22) { animation-delay: 4.4s; }
+.word-fade-in span:nth-child(23) { animation-delay: 4.6s; }
+.word-fade-in span:nth-child(24) { animation-delay: 4.8s; }
+.word-fade-in span:nth-child(25) { animation-delay: 5.0s; }
+.word-fade-in span:nth-child(26) { animation-delay: 5.2s; }
+.word-fade-in span:nth-child(27) { animation-delay: 5.4s; }
+.word-fade-in span:nth-child(28) { animation-delay: 5.6s; }
+.word-fade-in span:nth-child(29) { animation-delay: 5.8s; }
+.word-fade-in span:nth-child(30) { animation-delay: 6.0s; }
+.word-fade-in span:nth-child(31) { animation-delay: 6.2s; }
+.word-fade-in span:nth-child(32) { animation-delay: 6.4s; }
+.word-fade-in span:nth-child(33) { animation-delay: 6.6s; }
+.word-fade-in span:nth-child(34) { animation-delay: 6.8s; }
+.word-fade-in span:nth-child(35) { animation-delay: 7.0s; } 
+.word-fade-in span:nth-child(36) { animation-delay: 7.2s; }
+.word-fade-in span:nth-child(37) { animation-delay: 7.4s; }
+.word-fade-in span:nth-child(38) { animation-delay: 7.6s; }
+.word-fade-in span:nth-child(39) { animation-delay: 7.8s; }
+.word-fade-in span:nth-child(40) { animation-delay: 8.0s; }
+/* Add more as needed: nth-child(6) { animation-delay: 1.2s; } etc. */
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Optional: Add a subtle slide-up for extra polish */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.header-info-cont {
+  margin-top: 100px;
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 350px;
+
+}
+
+.header-info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-info-item .icon {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 8px;
+  opacity: 0.5;
+  
+}
+
+.header-info-item .title {
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 900;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: #ddd;
+  mix-blend-mode: overlay;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.contact-cont {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  font-family: system-ui, sans-serif;
+  margin-top: 30px;
+}
+
+.contact-items {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.contact-item .icon {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+  opacity: 0.3;
+  color: #fff;;
+}
+
+
+.footer-cont {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  height: 50vh;
+  align-items: center;
+  font-family: system-ui, sans-serif;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  font-weight: 400;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: #ddd;
+  mix-blend-mode: overlay;
+}

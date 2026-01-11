@@ -300,66 +300,71 @@ body::before {
 
   /* Each phrase: show -> fade out -> switch while invisible -> fade in */
   0% {
-    content: "Attention to Details";
+    content: "الاهتمام بالتفاصيل";
     opacity: 0;
   }
 
   10% {
-    content: "Attention to Details";
+    content: "الاهتمام بالتفاصيل";
     opacity: 1;
   }
 
   20% {
-    content: "Attention to Details";
+    content: "الاهتمام بالتفاصيل";
+    opacity: 0;
+  }
+
+  25% {
+    content: "محترف بيانات";
     opacity: 0;
     /* fade out */
   }
 
   25% {
-    content: "Data Expert";
+    content: "محترف بيانات";
     opacity: 0;
     /* content swapped while hidden */
   }
 
   35% {
-    content: "Data Expert";
+    content: "محترف بيانات";
     opacity: 1;
     /* fade in */
   }
 
   45% {
-    content: "Data Expert";
+    content: "محترف بيانات";
     opacity: 0;
     /* fade out again */
   }
 
   50% {
-    content: "Full-Stack Developer";
+    content: "مطور متكامل";
     opacity: 0;
   }
 
   60% {
-    content: "Full-Stack Developer";
+    content: "مطور متكامل";
     opacity: 1;
   }
 
   70% {
-    content: "Full-Stack Developer";
+    content: "مطور متكامل";
     opacity: 0;
   }
 
   75% {
-    content: "Tech Enthusiast";
+    content: "محب للتقنية";
     opacity: 0;
   }
 
   85% {
-    content: "Tech Enthusiast";
+    content: "محب للتقنية";
     opacity: 1;
   }
 
   100% {
-    content: "Tech Enthusiast";
+    content: "محب للتقنية";
     opacity: 0;
   }
 }
